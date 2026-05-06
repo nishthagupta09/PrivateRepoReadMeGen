@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/private-repo")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "*", allowCredentials = "true")
 public class RepoController {
 
     private final GitHubService gitHubService;
