@@ -9,7 +9,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "https://private-repo-read-me-gen-frontend.vercel.app/", allowCredentials = "true")
+@CrossOrigin(origins = "https://repo-read-me-gen.vercel.app/", allowCredentials = "true")
 public class UserController {
 
     @GetMapping("/user")

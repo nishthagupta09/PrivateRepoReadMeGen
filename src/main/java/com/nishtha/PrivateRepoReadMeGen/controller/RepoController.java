@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/private-repo")
-@CrossOrigin(origins = "https://private-repo-read-me-gen-frontend.vercel.app/", allowCredentials = "true")
+@CrossOrigin(origins = "https://repo-read-me-gen.vercel.app", allowCredentials = "true")
 public class RepoController {
 
     private final GitHubService gitHubService;
