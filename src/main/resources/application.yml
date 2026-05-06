@@ -15,5 +15,6 @@ spring:
             user-info-uri: https://api.github.com/user
             user-name-attribute: login
 
-gemini:
-  api-key: AIzaSyCE0dVnNSjYn5Sxtv3kHtzS9nz64tGCXQ4
+llm:
+  endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+  api-key: AIzaSyDjaG-DM0ylKo17myQvinq8EP0AoPCwUOI

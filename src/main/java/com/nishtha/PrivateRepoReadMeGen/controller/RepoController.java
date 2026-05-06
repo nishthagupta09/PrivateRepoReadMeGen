@@ -15,33 +15,37 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/private-repo")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class RepoController {
 
     private final GitHubService gitHubService;
-    private final GenerateService geminiService;
+    private final GenerateService generateService;
 
-    public RepoController(GitHubService gitHubService, GenerateService geminiService) {
+    public RepoController(GitHubService gitHubService, GenerateService generateService) {
         this.gitHubService = gitHubService;
-        this.geminiService = geminiService;
+        this.generateService = generateService;
     }
 
     @GetMapping
-    public List<RepoDTO> listRepos(@RegisteredOAuth2AuthorizedClient("github") OAuth2AuthorizedClient client) {
-        return gitHubService.listRepos(client);
+    public List<RepoDTO> getRepos(
+            @RegisteredOAuth2AuthorizedClient("github") OAuth2AuthorizedClient client
+    ) {
+        return gitHubService.getRepos(client);
     }
 
-   @PostMapping("/{username}/{repo}/generate-readme")
-   public String generateReadme(@RegisteredOAuth2AuthorizedClient("github") OAuth2AuthorizedClient client,
-                                   @PathVariable String username,
-                                   @PathVariable String repo,
-                                    @RequestBody Map<String, String> body) {
-       String codeSnippet = body.getOrDefault("snippet", "");
-       String repoReadme = gitHubService.getRepoReadme(client, username, repo);
-       return geminiService.generateReadme(repo, repoReadme, codeSnippet);
+    @PostMapping("/{owner}/{repo}/generate-readme")
+    public String generate(
+            @RegisteredOAuth2AuthorizedClient("github") OAuth2AuthorizedClient client,
+            @PathVariable String owner,
+            @PathVariable String repo,
+            @RequestBody ReadMeDTO request
+    ) {
+        String readme = gitHubService.getRepoReadme(client, owner, repo);
+        return generateService.generateReadme(
+                repo,
+                readme + "\n\n" + request.getSnippet());
     }
-
 }
