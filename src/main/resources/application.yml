@@ -7,7 +7,7 @@ spring:
             client-id: ${GITHUB_CLIENT_ID}
             client-secret: ${GITHUB_CLIENT_SECRET}
             scope: repo,user
-            redirect-uri: "{baseUrl}/login/oauth2/code/github"
+            redirect-uri: "https://privatereporeadmegen.onrender.com/login/oauth2/code/github"
         provider:
           github:
             authorization-uri: https://github.com/login/oauth/authorize
@@ -17,7 +17,7 @@ spring:
 
 llm:
   endpoint: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
-  api-key: AIzaSyDjaG-DM0ylKo17myQvinq8EP0AoPCwUOI
+  api-key: ${GEMINI_API_KEY}
 
 server:
   port: ${PORT:8080}
