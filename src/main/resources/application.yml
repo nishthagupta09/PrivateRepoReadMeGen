@@ -22,7 +22,7 @@ llm:
 server:
   port: ${PORT:8080}
 
-  servlet:
+servlet:
     session:
       cookie:
         same-site: none

@@ -65,7 +65,9 @@ public class GeminiClient {
             }
 
             Map<String, Object> candidate = candidates.get(0);
-            Map<String, Object> content = (Map<String, Object>) candidate.get("content");
+
+            Map<String, Object> content =
+                    (Map<String, Object>) candidate.get("content");
 
             if (content == null) {
                 return "Gemini returned no content.";
@@ -75,12 +77,16 @@ public class GeminiClient {
                     (List<Map<String, Object>>) content.get("parts");
 
             if (parts == null || parts.isEmpty()) {
-                return "No text found.";
+                return "No parts found in Gemini response.";
             }
 
-            Map<String, Object> first = parts.get(0);
+            Map<String, Object> firstPart = parts.get(0);
 
-            return (String) first.get("text");
+            if (firstPart == null || !firstPart.containsKey("text")) {
+                return "No text found in Gemini response.";
+            }
+
+            return firstPart.get("text").toString();
 
         } catch (Exception e) {
             return "Failed to parse Gemini response: " + e.getMessage();
