@@ -20,11 +20,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/**","/api/user").permitAll()
+                        .requestMatchers("/", "/oauth2/**", "/login/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
-                        .defaultSuccessUrl("https://repo-read-me-gen.vercel.app/?login=success", true)
+                        .defaultSuccessUrl("https://repo-read-me-gen.vercel.app", true)
                 );
 
         return http.build();
@@ -37,6 +37,7 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of("https://repo-read-me-gen.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Set-Cookie"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
