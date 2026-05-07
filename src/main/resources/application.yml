@@ -21,3 +21,9 @@ llm:
 
 server:
   port: ${PORT:8080}
+
+  servlet:
+    session:
+      cookie:
+        same-site: none
+        secure: true
