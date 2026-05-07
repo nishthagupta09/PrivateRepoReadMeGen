@@ -24,7 +24,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
-                        .defaultSuccessUrl("https://repo-read-me-gen.vercel.app", true)
+                        .defaultSuccessUrl("https://repo-read-me-gen.vercel.app/?login=success", true)
                 );
 
         return http.build();
