@@ -62,7 +62,8 @@ public class GitHubService {
             return new String(Base64.getDecoder().decode(encoded));
 
         } catch (Exception e) {
-            return "No README found.";
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
