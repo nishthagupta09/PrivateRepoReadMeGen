@@ -1,33 +1,32 @@
 package com.nishtha.PrivateRepoReadMeGen.controller;
 
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import com.nishtha.PrivateRepoReadMeGen.service.JWTService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "https://repo-read-me-gen.vercel.app", allowCredentials = "true")
+@CrossOrigin(origins = "https://repo-read-me-gen.vercel.app")
 public class UserController {
 
+    @Autowired
+    private JWTService JWTService;
+
     @GetMapping("/user")
-    public Object getUser(@AuthenticationPrincipal OAuth2User user) {
+    public Object getUser(
+            @RequestHeader("Authorization") String authHeader
+    ) {
 
-        if (user == null) {
-            return Map.of("loggedIn", false);
-        }
+        String token = authHeader.replace("Bearer ", "");
 
-        Map<String, Object> attributes = user.getAttributes();
-
-        System.out.println(user.getAttributes());
+        String username = JWTService.extractUsername(token);
 
         return Map.of(
                 "loggedIn", true,
-                "login", attributes.getOrDefault("login", "unknown"),
-                "name", attributes.getOrDefault("name", "unknown"),
-                "avatar", attributes.getOrDefault("avatar_url", "")
+                "login", username
         );
     }
 }

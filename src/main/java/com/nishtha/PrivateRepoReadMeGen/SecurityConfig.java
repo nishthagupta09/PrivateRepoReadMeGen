@@ -17,6 +17,11 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+    private final OAuthSuccessHandler successHandler;
+
+    public SecurityConfig(OAuthSuccessHandler successHandler) {
+        this.successHandler = successHandler;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -31,7 +36,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth -> oauth
-                        .defaultSuccessUrl("https://repo-read-me-gen.vercel.app/?login=success", true)
+                        .successHandler(successHandler)
                 );
 
         return http.build();
@@ -62,8 +67,7 @@ public class SecurityConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("https://repo-read-me-gen.vercel.app")
                         .allowedMethods("*")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowedHeaders("*");
             }
         };
     }
