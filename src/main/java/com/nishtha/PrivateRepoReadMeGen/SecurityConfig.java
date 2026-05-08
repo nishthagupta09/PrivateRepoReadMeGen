@@ -1,5 +1,6 @@
 package com.nishtha.PrivateRepoReadMeGen;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -17,6 +18,8 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
     private final OAuthSuccessHandler successHandler;
 
     public SecurityConfig(OAuthSuccessHandler successHandler) {

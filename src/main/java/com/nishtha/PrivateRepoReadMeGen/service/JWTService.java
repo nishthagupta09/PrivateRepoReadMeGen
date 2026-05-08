@@ -10,7 +10,7 @@ import java.util.Date;
 public class JWTService {
 
     private final String SECRET =
-            "mysecretkeymysecretkeymysecretkey";
+            "myverystrongsecretkeymyverystrongsecretkey123456";
 
     public String generateToken(String username) {
 

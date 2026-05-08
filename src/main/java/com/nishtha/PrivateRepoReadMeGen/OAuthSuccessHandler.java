@@ -33,8 +33,15 @@ public class OAuthSuccessHandler
         OAuth2User user =
                 (OAuth2User) authentication.getPrincipal();
 
-        String login =
-                user.getAttribute("login");
+        System.out.println(user.getAttributes());
+
+        String login = user.getAttribute("login");
+
+        if (login == null) {
+
+            response.sendError(500, "GitHub login missing");
+            return;
+        }
 
         String token =
                 jwtService.generateToken(login);
