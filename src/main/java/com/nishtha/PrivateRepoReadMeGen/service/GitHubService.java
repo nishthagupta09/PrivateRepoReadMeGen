@@ -63,7 +63,7 @@ public class GitHubService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            return "No existing README found. Generate a completely new README for this repository.";
         }
     }
 }
