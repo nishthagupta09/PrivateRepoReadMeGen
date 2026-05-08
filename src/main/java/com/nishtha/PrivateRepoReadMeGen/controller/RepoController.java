@@ -46,31 +46,27 @@ public class RepoController {
         return gitHubService.getRepos(githubToken);
     }
 
-    @PostMapping("/{repo}/generate-readme")
+    @PostMapping("/{owner}/{repo}/generate-readme")
     public String generate(
-            @RequestHeader("Authorization")
-            String authHeader,
+            @RequestHeader("Authorization") String authHeader,
             @PathVariable String owner,
             @PathVariable String repo,
-            @RequestBody ReadMeDTO request
+            @RequestBody ReadMeDTO req
     ) {
-        String token =
-                authHeader.replace("Bearer ", "");
 
-        String githubToken =
-                JWTService.extractGithubToken(token);
+        String token = authHeader.replace("Bearer ", "");
 
-        String username = JWTService.extractUsername(token);
+        String githubToken = JWTService.extractGithubToken(token);
 
-        String readme =
-                gitHubService.getRepoReadme(
-                        githubToken,
-                        username,
-                        repo
-                );
+        String readme = gitHubService.getRepoReadme(
+                githubToken,
+                owner,
+                repo
+        );
 
         return generateService.generateReadme(
                 repo,
-                readme + "\n\n" + request.getSnippet());
+                readme
+        );
     }
 }
