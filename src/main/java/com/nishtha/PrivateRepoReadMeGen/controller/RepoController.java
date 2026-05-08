@@ -53,20 +53,38 @@ public class RepoController {
             @PathVariable String repo,
             @RequestBody ReadMeDTO req
     ) {
+        try {
 
-        String token = authHeader.replace("Bearer ", "");
+            String token = authHeader.replace("Bearer ", "");
 
-        String githubToken = JWTService.extractGithubToken(token);
+            String githubToken = JWTService.extractGithubToken(token);
 
-        String readme = gitHubService.getRepoReadme(
-                githubToken,
-                owner,
-                repo
-        );
+            System.out.println("OWNER: " + owner);
+            System.out.println("REPO: " + repo);
+            System.out.println("GITHUB TOKEN: " + githubToken);
 
-        return generateService.generateReadme(
-                repo,
-                readme
-        );
+            String readme = gitHubService.getRepoReadme(
+                    githubToken,
+                    owner,
+                    repo
+            );
+
+            System.out.println("README FETCHED");
+
+            String generated = generateService.generateReadme(
+                    repo,
+                    readme
+            );
+
+            System.out.println("README GENERATED");
+
+            return generated;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return "ERROR: " + e.getMessage();
+        }
+
     }
 }
