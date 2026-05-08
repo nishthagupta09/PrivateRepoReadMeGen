@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -19,8 +20,8 @@ import java.io.IOException;
 public class OAuthSuccessHandler
         implements AuthenticationSuccessHandler {
 
+    @Autowired
     private final JWTService jwtService;
-
     private final OAuth2AuthorizedClientService authorizedClientService;
 
     public OAuthSuccessHandler(JWTService jwtService, OAuth2AuthorizedClientService authorizedClientService) {
