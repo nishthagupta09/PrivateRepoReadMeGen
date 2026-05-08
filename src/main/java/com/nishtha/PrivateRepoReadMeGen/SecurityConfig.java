@@ -35,8 +35,13 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/",
+                                "/oauth2/**",
+                                "/login/**",
+                                "/error",
+                                "/private-repo/**",
+                                "/api/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth -> oauth
                         .successHandler(successHandler)
@@ -52,7 +57,7 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of("https://repo-read-me-gen.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-        config.setExposedHeaders(List.of("Set-Cookie"));
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -61,17 +66,5 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer(){
-        return new WebMvcConfigurer(){
 
-            public void addCorsMappings(CorsRegistry registry){
-
-                registry.addMapping("/**")
-                        .allowedOrigins("https://repo-read-me-gen.vercel.app")
-                        .allowedMethods("*")
-                        .allowedHeaders("*");
-            }
-        };
-    }
 }

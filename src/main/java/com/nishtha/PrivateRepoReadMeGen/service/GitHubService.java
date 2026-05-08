@@ -6,7 +6,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,10 +18,10 @@ public class GitHubService {
 
     private final RestTemplate rest = new RestTemplate();
 
-    public List<RepoDTO> getRepos(OAuth2AuthorizedClient client) {
+    public List<RepoDTO> getRepos(String githubToken) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(client.getAccessToken().getTokenValue());
+        headers.setBearerAuth(githubToken);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
@@ -42,12 +41,12 @@ public class GitHubService {
         ).toList();
     }
 
-    public String getRepoReadme(OAuth2AuthorizedClient client, String owner, String repo) {
+    public String getRepoReadme(String githubToken, String owner, String repo) {
 
         String url = "https://api.github.com/repos/" + owner + "/" + repo + "/readme";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(client.getAccessToken().getTokenValue());
+        headers.setBearerAuth(githubToken);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 

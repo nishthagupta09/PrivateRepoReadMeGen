@@ -1,7 +1,9 @@
 package com.nishtha.PrivateRepoReadMeGen.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -9,13 +11,14 @@ import java.util.Date;
 @Service
 public class JWTService {
 
-    private final String SECRET =
-            "myverystrongsecretkeymyverystrongsecretkey123456";
+    @Value("${jwt.secret}")
+    private String SECRET;
 
-    public String generateToken(String username) {
+    public String generateToken(String username,String githubToken) {
 
         return Jwts.builder()
                 .setSubject(username)
+                .claim("githubToken",githubToken)
                 .setIssuedAt(new Date())
                 .setExpiration(
                         new Date(System.currentTimeMillis() + 86400000)
@@ -35,5 +38,20 @@ public class JWTService {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    private Claims extractAllClaims(String token) {
+
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET.getBytes())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public String extractGithubToken(String token) {
+
+        return extractAllClaims(token)
+                .get("githubToken", String.class);
     }
 }
