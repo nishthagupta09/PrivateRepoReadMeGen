@@ -5,6 +5,7 @@ import com.nishtha.PrivateRepoReadMeGen.DTOs.RepoDTO;
 import com.nishtha.PrivateRepoReadMeGen.service.GenerateService;
 import com.nishtha.PrivateRepoReadMeGen.service.GitHubService;
 import com.nishtha.PrivateRepoReadMeGen.service.JWTService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,8 @@ public class RepoController {
 
     private final GitHubService gitHubService;
     private final GenerateService generateService;
+
+    @Autowired
     private final JWTService JWTService;
 
     public RepoController(GitHubService gitHubService, GenerateService generateService, JWTService jwtService) {
