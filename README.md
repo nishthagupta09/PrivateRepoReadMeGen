@@ -1,4 +1,6 @@
-DISCLAIMER: This ReadMe was generated using the given project only.
+DISCLAIMER: This ReadMe was generated using the given project only. This repository only contains the backend of the project using Java. Backend was deployed using Render.
+
+Link (after deployment): https://repo-read-me-gen.vercel.app/
 
 # PrivaGen: Your Automated README Companion 
 
