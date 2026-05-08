@@ -26,7 +26,8 @@ public class UserController {
 
         return Map.of(
                 "loggedIn", true,
-                "login", username
+                "login", username,
+                "name",username
         );
     }
 }
