@@ -12,8 +12,8 @@ import java.util.Date;
 @Service
 public class JWTService {
 
-    @Value("${jwt.secret}")
-    private String SECRET;
+    private String SECRET=
+            "myverystrongsecretkeymyverystrongsecretkey123456";
 
     public String generateToken(String username,String githubToken) {
 
