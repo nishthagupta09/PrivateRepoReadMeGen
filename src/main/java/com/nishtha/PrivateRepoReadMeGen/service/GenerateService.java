@@ -19,12 +19,12 @@ public class GenerateService {
                 "Include:\n" +
                 "- Project title of the repository\n" +
                 "- Description of what the code is trying to build\n" +
-                "- Features written in the code for the project\n" +
-                "- Tech stack used in the project\n" +
+                "- Features(interpret it using the code in the repository)\n" +
+                "- Tech stack used in the code\n" +
                 "- Installation steps(easy to understand)\n" +
                 "- Usage of the project\n" +
                 "\n" +
-                "Do NOT copy existing text.\n" +
+                "Do NOT copy existing text. And do not make up things that do not exist in the repository source code.\n" +
                 "Rewrite everything creatively but keep it simple and easy to understand.\n" +
                 "\n" +
                 "Project info: "
