@@ -14,7 +14,7 @@ public class GenerateService {
 
     public String generateReadme(String repoName, String content) {
 
-        String prompt = "Write a professional README.md for the given repository.Read and understand the code before giving the output\n" +
+        String prompt = "Write a professional README.md for the given repository by reading the given src file in git.Read and understand the code before giving the output\n" +
                 "\n" +
                 "Include:\n" +
                 "- Project title of the repository\n" +
@@ -24,7 +24,7 @@ public class GenerateService {
                 "- Installation steps(easy to understand)\n" +
                 "- Usage of the project\n" +
                 "\n" +
-                "Do NOT copy existing text. And do not make up things that do not exist in the repository source code.\n" +
+                "Do NOT copy existing text. And do not make up things that do not exist in the repository src file.\n" +
                 "Rewrite everything creatively but keep it simple and easy to understand.\n" +
                 "\n" +
                 "Project info: "
