@@ -36,7 +36,6 @@ Include:
 # Description
 # Features
 # Tech Stack
-# Project Structure
 # Installation
 # Usage
 # API Endpoints (if backend)
