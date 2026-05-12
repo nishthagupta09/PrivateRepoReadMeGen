@@ -63,7 +63,7 @@ public class RepoController {
             System.out.println("REPO: " + repo);
             System.out.println("GITHUB TOKEN: " + githubToken);
 
-            String readme = gitHubService.getRepoReadme(
+            String structure = gitHubService.getRepoStructure(
                     githubToken,
                     owner,
                     repo
@@ -73,7 +73,7 @@ public class RepoController {
 
             String generated = generateService.generateReadme(
                     repo,
-                    readme
+                    structure
             );
 
             System.out.println("README GENERATED");

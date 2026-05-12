@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -41,29 +40,33 @@ public class GitHubService {
         ).toList();
     }
 
-    public String getRepoReadme(String githubToken, String owner, String repo) {
+    public String getRepoStructure(String githubToken, String owner, String repo) {
 
-        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/readme";
+        String url = "https://api.github.com/repos/" + owner + "/" + repo + "/contents";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(githubToken);
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
-        try {
-            ResponseEntity<Map> res = rest.exchange(
+            ResponseEntity<List> res = rest.exchange(
                     url,
                     HttpMethod.GET,
                     entity,
-                    Map.class
+                    List.class
             );
 
-            String encoded = (String) res.getBody().get("content");
-            return new String(Base64.getDecoder().decode(encoded));
+            StringBuilder structure = new StringBuilder();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "No existing README found. Generate a completely new README for this repository.";
-        }
+            List<Map<String, Object>> files = res.getBody();
+
+            for (Map<String, Object> file : files) {
+
+                structure.append(file.get("type"))
+                        .append(": ")
+                        .append(file.get("name"))
+                        .append("\n");
+            }
+            return structure.toString();
     }
 }

@@ -14,23 +14,39 @@ public class GenerateService {
 
     public String generateReadme(String repoName, String content) {
 
-        String prompt = "Write a professional README.md for the given repository by reading the given src file in git.Read and understand the code before giving the output\n" +
-                "\n" +
-                "Include:\n" +
-                "- Project title of the repository\n" +
-                "- Description of what the code is trying to build\n" +
-                "- Features(interpret it using the code in the repository)\n" +
-                "- Tech stack used in the code\n" +
-                "- Installation steps(easy to understand)\n" +
-                "- Usage of the project\n" +
-                "\n" +
-                "Do NOT copy existing text. And do not make up things that do not exist in the repository src file.\n" +
-                "Rewrite everything creatively but keep it simple and easy to understand.\n" +
-                "\n" +
-                "Project info: "
+        String prompt = """
+You are an expert software engineer.
 
-                + repoName + "\n\nCode/README:\n" + content;
+Generate a professional README.md for this repository.
 
+Analyze the repository structure carefully and infer:
+
+- programming language
+- framework
+- architecture
+- purpose of project
+- likely features
+- setup instructions
+- usage instructions
+
+Write a polished GitHub README.
+
+Include:
+# Project Title
+# Description
+# Features
+# Tech Stack
+# Project Structure
+# Installation
+# Usage
+# API Endpoints (if backend)
+# Future Improvements
+
+Repository name:
+""" + repoName + """
+
+Repository structure:
+""" + content;
         return gemini.generate(prompt);
     }
 }
