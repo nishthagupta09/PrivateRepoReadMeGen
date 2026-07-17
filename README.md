@@ -1,98 +1,104 @@
-DISCLAIMER: This ReadMe was generated using the given project only. This repository only contains the backend of the project using Java. Backend was deployed using Render.
+# QREventSystem — Backend
 
-Link (after deployment): https://repo-read-me-gen.vercel.app/
+A Spring Boot REST API for creating events and tracking attendee check-ins via a unique, per-event code (designed to be shared/scanned as a QR code by a companion frontend).
 
-# PrivaGen: Your Automated README Companion 
+Live app frontend: https://qr-event-system-theta.vercel.app
 
-## Project Overview
+## How It Works
 
-PrivaGen (short for Private Repository Generator) is a sophisticated command-line interface (CLI) tool engineered to drastically simplify and accelerate the process of creating comprehensive, professional, and consistent `README.md` files for your software projects. Designed with developer efficiency in mind, PrivaGen interactively guides you through a series of intuitive prompts, intelligently assembling a well-structured and informative README tailored to your project's specifics. Whether you're bootstrapping a new venture, bringing clarity to an existing private repository, or ensuring documentation standards across a team, PrivaGen ensures your project's first impression is always impactful and on point.
-
-## Key Features
-
-*   **Interactive CLI Workflow**: Experience a guided, step-by-step process via an engaging command-line interface, making README generation effortless even for complex projects.
-*   **Structured Content Generation**: Automatically produces a logically organized `README.md` with essential sections like Project Title, Description, Features, Tech Stack, Installation, and Usage.
-*   **Dynamic Prompting**: Intelligently adapts prompts based on previous inputs, ensuring only relevant information is requested.
-*   **Markdown-Ready Output**: Generates clean, standard-compliant Markdown, ready for immediate use on GitHub, GitLab, Bitbucket, or any Markdown renderer.
-*   **Input Validation**: Helps prevent common errors by validating user inputs where applicable, guiding you towards complete and correct information.
-*   **Customizable Section Inclusion**: Choose to include optional, professional sections such as Contributing Guidelines, License Information, and Contact details to further enhance your project's documentation.
-*   **Direct File Output**: Outputs the generated README directly to a `README.md` file in your current directory, or a specified path.
+1. An organizer creates an **Event** (title, location, date, time) via `POST /event`.
+2. The backend auto-generates a unique, URL-friendly **event code** by slugifying the title and appending a random 4-digit number (e.g. `product-launch-4821`), retrying until it's unique.
+3. That event code is what gets encoded into a QR code / shareable link on the frontend for attendees to check in.
+4. Attendees check in via `POST /attendance` with their name, email, and the event code.
+5. Duplicate check-ins (same email + event code) are rejected.
+6. Organizers can look up an event by its code, and list all attendance records for an event.
 
 ## Tech Stack
 
-PrivaGen is built with robust and modern technologies to ensure a smooth, efficient, and user-friendly experience:
+- **Java 17**, **Spring Boot 4.0**
+- **Spring Web MVC** (`spring-boot-starter-webmvc`)
+- **Spring Data JPA** with **MySQL** (`mysql-connector-j`)
+- **Lombok** for boilerplate reduction on entities
+- **Maven** build, packaged and run via a multi-stage **Docker** image
 
-*   **Python 3.x**: The core programming language, chosen for its readability, extensive libraries, and ease of development.
-*   **[Click](https://palletsprojects.com/p/click/)**: A powerful, elegant, and composable CLI toolkit for Python, providing robust command-line argument parsing and command structuring.
-*   **[InquirerPy](https://github.com/kazhala/InquirerPy)**: An intuitive library for creating interactive prompts in the terminal, enhancing the user experience with selectable options and dynamic inputs.
-*   **[Rich](https://github.com/Textualize/rich)**: For beautiful terminal rendering, providing rich colors, markdown support, and progress bars to make the CLI experience more engaging and informative.
+## Project Structure
 
-## Installation
+```
+src/main/java/com/nishtha/QREventSystem/
+├── QrEventSystemApplication.java     # Spring Boot entry point
+├── Config/
+│   └── CorsConfig.java               # CORS: allows the deployed frontend origin
+├── controller/
+│   ├── EventController.java          # /event - create & look up events
+│   └── AttendanceController.java     # /attendance - check in & list attendance
+├── services/
+│   ├── EventService.java             # Event creation, unique code generation, lookups
+│   └── AttendanceService.java        # Check-in logic, duplicate prevention
+├── repository/
+│   ├── EventRepository.java          # JPA repository for Event
+│   └── AttendanceRepository.java     # JPA repository for Attendance
+└── entity/
+    ├── Event.java                    # id, eventCode, title, location, date, time
+    └── Attendance.java               # id, eventCode, name, email
+```
 
-Getting PrivaGen up and running is straightforward. Follow these steps to install and prepare the tool for use:
+## API Endpoints
 
-1.  **Clone the Repository**:
-    Begin by cloning the PrivaGen repository to your local machine:
-    ```bash
-    git clone https://github.com/your-username/PrivateRepoReadMeGen.git
-    cd PrivateRepoReadMeGen
-    ```
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/event` | Create a new event; returns the event including its generated `eventCode` |
+| `GET` | `/event/code/{code}` | Fetch an event by its event code |
+| `POST` | `/attendance` | Check an attendee in to an event (rejects duplicate email+eventCode) |
+| `GET` | `/attendance/{eventCode}` | List all attendance records for an event |
 
-2.  **Create a Virtual Environment (Recommended)**:
-    It's best practice to work within a virtual environment to manage dependencies:
-    ```bash
-    python3 -m venv venv
-    ```
+## Configuration
 
-3.  **Activate the Virtual Environment**:
-    *   **On macOS/Linux**:
-        ```bash
-        source venv/bin/activate
-        ```
-    *   **On Windows (Command Prompt)**:
-        ```bash
-        .\venv\Scripts\activate.bat
-        ```
-    *   **On Windows (PowerShell)**:
-        ```bash
-        .\venv\Scripts\Activate.ps1
-        ```
+Configured via `src/main/resources/application.properties`, backed by environment variables:
 
-4.  **Install Dependencies**:
-    With your virtual environment activated, install all necessary project dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+| Variable | Purpose |
+|---|---|
+| `DB_URL` | JDBC URL for the MySQL database |
+| `DB_USERNAME` | Database username |
+| `DB_PASSWORD` | Database password |
 
-You are now ready to use PrivaGen!
+`spring.jpa.hibernate.ddl-auto=update` means the schema (tables for `Event` and `Attendance`) is created/updated automatically on startup — no manual migrations needed for local development.
 
-## Usage
+## Running Locally
 
-Once installed, simply run the main script to start the interactive README generation process.
+**Prerequisites:** Java 17, Maven (or the included `mvnw` wrapper), and a running MySQL instance.
 
-1.  **Navigate to your Project Directory**:
-    Go to the root directory of the software project for which you want to generate a `README.md`.
+```bash
+git clone https://github.com/nishthagupta09/QREventSystem_Backend.git
+cd QREventSystem_Backend
 
-2.  **Run PrivaGen**:
-    Execute the PrivaGen tool from your terminal:
-    ```bash
-    python privagen_cli.py
-    ```
-    *(Note: The exact script name might be `privagen.py` or similar depending on the project structure. Adjust if necessary.)*
+export DB_URL=jdbc:mysql://localhost:3306/qreventsystem
+export DB_USERNAME=your_db_user
+export DB_PASSWORD=your_db_password
 
-3.  **Follow the Prompts**:
-    PrivaGen will then guide you through a series of interactive questions, prompting you for details such as:
-    *   Project Title
-    *   Description
-    *   Key Features
-    *   Technologies Used (Tech Stack)
-    *   Installation Instructions
-    *   Usage Examples
-    *   Optional sections like Contributing, License, and Contact info.
+./mvnw spring-boot:run
+```
 
-    Simply type your answers and press `Enter`. For multi-line inputs, follow the specific instructions (e.g., type your content and then press `Ctrl+D` on a new line to finish).
+The API will be available at `http://localhost:8080`.
 
-4.  **Review and Generate**:
-    After you've provided all the necessary information, PrivaGen will compile your inputs into a well-formatted `README.md` file in your current directory. It will typically provide a confirmation message indicating the successful creation of the file.
+### With Docker
 
-    You can then open the generated `README.md` with your favorite Markdown editor or text viewer to review and make any final manual adjustments.
+```bash
+docker build -t qr-event-system .
+docker run -p 8080:8080 \
+  -e DB_URL=jdbc:mysql://host.docker.internal:3306/qreventsystem \
+  -e DB_USERNAME=your_db_user \
+  -e DB_PASSWORD=your_db_password \
+  qr-event-system
+```
+
+## Notes
+
+- `AttendanceController` and `EventController` currently allow CORS from `*` (wildcard) at the controller level, while `CorsConfig` restricts the global mapping to the deployed frontend origin — worth reconciling these before production hardening.
+- Duplicate check-in attempts throw a generic `RuntimeException`, which isn't currently mapped to a clean HTTP error response (e.g. `409 Conflict`).
+
+## Future Improvements
+
+- Global exception handling for cleaner error responses (e.g. `409` on duplicate check-in, `404` on unknown event code)
+- Server-side QR code image generation (currently the event code alone is returned; encoding it into an actual QR image appears to be a frontend concern)
+- Authentication for organizers so events can't be created/queried anonymously
+- Pagination for attendance lists on large events
