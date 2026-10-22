@@ -4,7 +4,6 @@ A Spring Boot REST API that signs users in with GitHub, lists their repositories
 
 - **Live app:** https://repo-read-me-gen.vercel.app
 - **Frontend repo:** [PrivateRepoReadMeGen_Frontend](https://github.com/nishthagupta09/PrivateRepoReadMeGen_Frontend)
-- **Deployed API:** `https://privatereporeadmegen.onrender.com`
 
 ## How It Works
 
